@@ -40,7 +40,7 @@ public class HTMLCharsetDetector {
     public String detect(InputStream htmlStream, boolean... lookInMeta) throws IOException {
         Document domTree = null;
         if (lookInMeta.length > 0 && lookInMeta[0]) {
-            domTree = createDomTree(toByteArray(htmlStream), Charsets.ISO_8859_1.toString());
+            domTree = createDomTree(toByteArray(htmlStream), Charsets.ISO_8859_1.getValue());
             String charset = lookInMetaTags(domTree);
             if (Charsets.isValid(charset)) {
                 return Charsets.normalize(charset);
@@ -49,18 +49,18 @@ public class HTMLCharsetDetector {
 
         boolean isUTF8 = Utf8.isValidUpToTruncation(htmlStream);
         if (isUTF8 == true) {
-            return Charsets.UTF_8.toString();
+            return Charsets.UTF_8.getValue();
         }
 
         if (domTree == null) {
-            domTree = createDomTree(toByteArray(htmlStream), Charsets.ISO_8859_1.toString());
+            domTree = createDomTree(toByteArray(htmlStream), Charsets.ISO_8859_1.getValue());
         }
         String visibleText = domTree.text();
         InputStream visibleTextStream;
         if (visibleText.length() < threshold) {
             visibleTextStream = htmlStream;
         } else {
-            visibleTextStream = new ByteArrayInputStream(visibleText.getBytes(Charsets.ISO_8859_1.toString()));
+            visibleTextStream = new ByteArrayInputStream(visibleText.getBytes(Charsets.ISO_8859_1.getValue()));
         }
 
         CharsetDetector charsetDetector = new CharsetDetector();
